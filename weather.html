@@ -1,0 +1,101 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>weather</title>
+    <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <script src="../lib/hmac-sha1.js" type="text/javascript"></script>
+    <script src="../lib/enc-base64.js" type="text/javascript"></script>
+    <style type="text/css">
+        .aday{
+            float: left;
+            border: dashed 1px;
+            min-width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <H1>civer weather</H1>
+    选择城市：
+    <select id="city" onchange="getWeather()">
+    <!-- <select id="city" onchange="getWeather(this.value)"> -->
+    <option value="wuhan">武汉</option>
+    <option value="beijing">北京</option>
+    <option value="shanghai">上海</option>
+    <option value="shenzhen">深圳</option>
+    </select>
+    <div id = "content">
+        <div></div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var weatherDescriptions = {
+        "date": "日期:",
+        "text_day": "白天:",
+        "code_day": "",
+        "text_night": "夜晚:",
+        "code_night": "",
+        "high": "最高温度:",
+        "low": "最低温度:",
+        "precip": "降水概率:",
+        "wind_direction": "风向:",
+        "wind_direction_degree": "风向角度:",
+        "wind_speed": "风速(km/h):",
+        "wind_scale": "风力等级:"
+    }
+
+    showWeather = function(data) {
+            var location = data.results[0].location;
+            var days = data.results[0].daily;
+            var htmlLocation = document.createElement("span");
+            htmlLocation.innerText = location.path;
+            var htmldays = document.createElement("div");
+            for (var i = 0; i < days.length; i++) {
+                var day = document.createElement("div");
+                day.setAttribute("class","aday" )
+                var a;
+                for (a in days[i]){
+                    var ap = document.createElement("p")
+                    if (a=="code_day"||a=="code_night") {
+                        var weatherIMG = document.createElement("img")
+                        weatherIMG.src = "../res/weather/" + days[i][a] + ".png";
+                        ap.append(weatherIMG);
+                    }else{
+                        ap.innerText = weatherDescriptions[a] + " " + days[i][a];
+                    }
+                    day.append(ap);
+                }
+                htmldays.append(day);
+            };
+            $("#content").empty();
+            $("#content").append(htmlLocation,htmldays);
+        }
+    function getWeather(wantCity){
+        /*心知天气API，934599659@qq.com，密码zsw123
+            更换服务器注意更换绑定域名*/
+        var UID = "UB13FA703B"; // 用户ID
+        var KEY = "bi0tu1tgzylgxhrs"; // 用户Key
+        var API = "https://api.seniverse.com/v3/weather/daily.json"; // 获取天气实况
+        // var API1 = "https://api.seniverse.com/v3/weather/daily.json"; // 获取按日天气
+        var city = document.getElementById('city');
+        var LOCATION = wantCity?wantCity:city.value; // 除拼音外，还可以使用 v3 id、汉语等形式
+        // 获取当前时间戳
+        var ts = Math.floor((new Date()).getTime() / 1000);
+        // 构造验证参数字符串
+        var str = "ts=" + ts + "&uid=" + UID;
+        // 使用 HMAC-SHA1 方式，以 API 密钥（key）对上一步生成的参数字符串（raw）进行加密
+        // 并将加密结果用 base64 编码，并做一个 urlencode，得到签名 sig
+        var sig = CryptoJS.HmacSHA1(str, KEY).toString(CryptoJS.enc.Base64);
+        sig = encodeURIComponent(sig);
+        str = str + "&sig=" + sig;
+        // 构造最终请求的 url
+        var url = API + "?location=" + LOCATION + "&" + str + "&callback=showWeather";
+        // 向 HTML 中动态插入 script 标签，通过 JSONP 的方式进行调用
+        var newScript = document.createElement('script');
+        newScript.type = 'text/javascript';
+        newScript.src = url;
+        $('body').append(newScript);
+    }
+    getWeather();
+</script>
+</html>

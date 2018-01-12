@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <title>日志对比</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            display: none;
+        }
+        thead tr{
+             background-color: #eeeeee;
+        }
+        td {
+            padding: 4px 0 4px;
+            border: 1px solid black;
+            max-width: 150px;
+            word-wrap: break-word;
+        }
+        tr:hover {
+            background-color: #eeeeee;
+        }
+        /*	tr>:first-child{
+        text-align:right;
+        margin-right: 3px;
+        }*/
+    </style>
+</head>
+<body>
+    <div style="width: 90%;margin: auto">
+        分隔符：
+        <select id="sep">
+        <option value="|">|</option>
+        <option value="@">@</option>
+        <option value="#">#</option>
+        </select> 
+        自定义分隔符：
+        <textarea id="selfsep" rows="1" cols="5"></textarea>
+        <br> 数据名: <textarea id="head" rows="10" cols="" style="width: 100%"></textarea>
+        <br> 数据值(可多条): <textarea id="content" rows="6" cols="" style="width: 100%"></textarea>
+        <br>
+        <button onclick="compare();">对比</button>
+        <br><span id="des"></span>
+        <hr>
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>数据列</th>
+                    <th>数据列</th>
+                </tr>
+            </thead>
+            <tbody id="result">
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        function compare() {
+
+            var sep = document.getElementById("sep"),
+                selfsep = document.getElementById("selfsep"),
+                table = document.getElementById("table"),
+                h = document.getElementById("head"),
+                c = document.getElementById("content"),
+                r = document.getElementById("result");
+            var hv = h.value,
+                cv = c.value;
+            while (r.firstChild) {
+                var oldNode = r.removeChild(r.firstChild);
+                oldNode = null;
+            }
+            hv = hv.split(selfsep.value ? selfsep.value : sep.value);
+            cv = cv.split(selfsep.value ? selfsep.value : sep.value);
+            // console.log(hv);
+            // console.log(cv);
+            if ((cv.length - 1) % (hv.length - 1)) {
+                document.getElementById("des").innerHTML = "字段数量（"+cv.length+"）与表头数量（"+hv.length+"）不一致，请检查！";
+            } else if (hv) {
+                table.setAttribute("style", "display: block");
+                document.getElementById("des").innerHTML = "";
+            }
+            var len = hv.length - 1;
+            var col = (cv.length - 1) / len;
+            for (var i = 0; i < hv.length - 1; i++) {
+                var trnode = document.createElement("tr"),
+                    tdnodeindex = document.createElement("td"),
+                    tdnode1 = document.createElement("td");
+                tdnodeindex.textContent = (i + 1).toString();
+                trnode.appendChild(tdnodeindex);
+                tdnode1.textContent = hv[i];
+                trnode.appendChild(tdnode1);
+                for (var j = 0; j < col; j++) {
+                    var tdnode = document.createElement("td");
+                    tdnode.textContent = cv[i + len * j];
+                    trnode.appendChild(tdnode);
+                }
+                r.appendChild(trnode);
+            }
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<html>
+<head>
+	<title>Exact Change</title>
+    <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+</head>
+<body>
+<div style="height: 40%;" class="table-responsive"></div>
+</body>
+<script type="text/javascript">
+function checkCashRegister(price, cash, cid) {
+  var height = $(".table-responsive");
+  // Here is your change, ma'am.
+  var change = [];
+  var temp = cash*100-price*100;
+  var total = 0;
+  for(var i = cid.length-1;i>-1;i--){
+    total += cid[i][1]*100;
+  }
+
+  if(total==temp){
+    return "Closed";
+  }else if(total<temp){
+    return "Insufficient Funds";
+  }else{
+    total = 0;
+    var temp1 = temp;
+    // var cid = [["PENNY", 0.50], ["NICKEL", 1.50], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]];
+    for(i = cid.length-1;i>-1;i--){
+      var amount = trasDollar(cid[i][0]);
+      if(temp>cid[i][1]*100){
+        temp = temp - cid[i][1]*100;
+        continue;
+      }else{
+        // cid[i][1] = temp;
+        cid[i][1] = (Math.floor(temp/amount)*amount/100);
+        temp = temp - cid[i][1]*100;
+
+      }
+    }
+    for(i=0;i< cid.length-1;i++){
+      if(cid[i][1]!=0){
+        change.push(cid[i]);
+        total += cid[i][1]*100;
+      }
+    }
+    return total==temp1?change:"Insufficient Funds";
+  }
+};
+
+function trasDollar(str){
+  var json = {
+    "PENNY": 1,
+    "NICKEL": 5,
+    "DIME": 10,
+    "QUARTER": 25,
+    "ONE": 100,
+    "FIVE": 500,
+    "TEN": 1000,
+    "TWENTY": 2000,
+    "ONE HUNDRED": 10000
+  }
+
+  var array = [];
+  for (var n in json) {
+      var m = json[n];
+      if (str == undefined) {
+          array.push(m);
+      }
+      else {
+          if (str == n) {
+              return m;
+          }
+          if (str == m) {
+              return n;
+          }
+      }
+  }
+
+  if (array.length > 0) {
+      return array;
+  }
+  else {
+      return "";
+  }
+}
+
+// Example cash-in-drawer array:
+// [["PENNY", 1.01],        0.01
+// ["NICKEL", 2.05],        0.05
+// ["DIME", 3.10],          0.1
+// ["QUARTER", 4.25],       0.25
+// ["ONE", 90.00],          1
+// ["FIVE", 55.00],         5
+// ["TEN", 20.00],          10
+// ["TWENTY", 60.00],       20
+// ["ONE HUNDRED", 100.00]]  100
+console.log(checkCashRegister(3.26, 100.00, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.10], ["QUARTER", 4.25], ["ONE", 90.00], ["FIVE", 55.00], ["TEN", 20.00], ["TWENTY", 60.00], ["ONE HUNDRED", 100.00]]));
+</script>
+</html>

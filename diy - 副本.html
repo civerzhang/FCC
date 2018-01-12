@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>diy</title>
+        <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <style type="text/css">
+            body{
+
+                white-space-collapse: trim-inner;
+            }
+            div{
+                float: left;
+                display: inline-block;
+                margin: 0;
+                height: 25px;
+                width: 40%;
+            }
+            span{
+                height: 30px;
+            }
+        </style>
+    </head>
+<body id="body">
+    <span>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+    </span>
+    
+</body>
+<script type="text/javascript">
+    // 移除行内元素自动生成的空白文本节点
+/*    var a = document.getElementsByTagName("body")[0];
+    for (var i = 0; i < a.childNodes.length; i++) {
+        var node = a.childNodes[i];
+        if (node.nodeType == 3 && !/\S/.test(node.nodeValue)) {
+            node.parentNode.removeChild(node)
+        }
+    }*/
+
+
+    // 统计次数最多的字符出现的次数
+    var str = 'assasaa';
+    function findMax(str){
+        var hash = {};
+        for (var i = 0; i < str.length; i++) {
+            if (hash[str[i]]) {
+                hash[str[i]] += 1;
+            }else{hash[str[i]] = 1;}
+        };
+        var arrValue = Object.entries(hash).map(function(arr){
+            return arr[1];
+        })
+        return Math.max.apply(null,arrValue);
+    }
+    console.log(findMax(str))
+</script>
+</html>

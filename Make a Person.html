@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Make a Person</title>
+        <!-- // <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script> -->
+    </head>
+    <body>
+        <script type="text/javascript">
+            var Person = function(fullName) {
+                this.getFirstName = function() {
+                    return fullName.split(' ')[0];
+                };
+                this.getLastName = function() {
+                    return fullName.split(' ')[1];
+                };
+                this.getFullName = function() {
+                    return fullName;
+                };
+                this.setFirstName = function(first) {
+                    var arr = fullName.split(' ');
+                    arr[0] = first;
+                    fullName = arr.join(' ');
+                };
+                this.setLastName = function(last) {
+                    var arr = fullName.split(' ');
+                    arr[1] = last;
+                    fullName = arr.join(' ');
+                };
+                this.setFullName = function(full) {
+                    fullName = full;
+                };
+
+                return this;
+            };
+
+            var bob = new Person('Bob Ross');
+            bob.getFullName();
+        </script>
+    </body>
+</html>

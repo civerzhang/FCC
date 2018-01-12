@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Friendly Date Ranges</title>
+    <!-- // <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script> -->
+</head>
+<body>
+<script type="text/javascript">
+    var mounths = {
+        "01":"January",
+        "02":"February",
+        "03":"March",
+        "04":"April",
+        "05":"May",
+        "06":"June",
+        "07":"July",
+        "08":"August",
+        "09":"September",
+        "10":"October",
+        "11":"November",
+        "12":"December",
+    };
+    var days = {
+        "01":"1st",
+        "02":"2nd",
+        "03":"3rd",
+        "04":"4th",
+        "05":"5th",
+        "06":"6th",
+        "07":"7th",
+        "08":"8th",
+        "09":"9th",
+        "10":"10th",
+        "11":"11st",
+        "12":"12nd",
+        "13":"13th",
+        "14":"14th",
+        "15":"15th",
+        "16":"16th",
+        "17":"17th",
+        "18":"18th",
+        "19":"19th",
+        "20":"20th",
+        "21":"21st",
+        "22":"22nd",
+        "23":"23rd",
+        "24":"24th",
+        "25":"25th",
+        "26":"26th",
+        "27":"27th",
+        "28":"28th",
+        "29":"29th",
+        "30":"30th",
+        "31":"31st",
+    };
+    function makeFriendlyDates(arr) {
+        var a1 = arr[0].split("-"),
+            a2 = arr[1].split("-"),
+            date1 = new Date(a1[1] + '-' + a1[2] + '-' + a1[0]),
+            date2 = new Date(a2[1] + '-' + a2[2] + '-' + a2[0]),
+            daynum = parseInt(Math.abs(date2 - date1) / 1000 / 60 / 60 /24)+1;
+        arr = [];
+        a1[1] = mounths[a1[1]];
+        a1[2] = days[a1[2]];
+        a2[1] = mounths[a2[1]];
+        a2[2] = days[a2[2]];
+        arr[0] = a1[1] + " " + a1[2] + ", " + a1[0];
+        arr[1] = a2[1] + " " + a2[2] + ", " + a2[0];
+        if(daynum<=365){
+            arr[1] = arr[1].substring(0,arr[1].length-6);
+            if(a1[0]=="2016"){
+                arr[0] = arr[0].substring(0,arr[0].length-6);
+            }
+
+        }
+        if (a1[0]==a2[0]&&a1[1]==a2[1]) {
+            arr[1] = arr[1].substr(arr[1].indexOf(" ")+1);
+            if(a1[2]==a2[2]){
+                arr.pop();
+                arr[0] = a1[1] + " " + a1[2] + ", " + a1[0];
+            }
+        }
+        console.log(arr);
+        return arr;
+    }
+    makeFriendlyDates(["2022-09-05", "2023-09-04"]);
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>No repeats please</title>
+    <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script>
+</head>
+<body>
+<script type="text/javascript">
+    function permAlone(str) {
+        var c = 0,
+                re = /(.)\1+/g,
+                arr = str.split(''),
+                newArr = [];
+        //全部相等时返回0
+        if (str.match(re) !== null && str.match(re)[0] === str) return 0;
+        // 创建一个交换函数来交换变量的内容
+        var temp;
+
+        function change(index1, index2) {
+            temp = arr[index1];
+            arr[index1] = arr[index2];
+            arr[index2] = temp;
+        }
+
+        //创建递归函数,生成所情况的组合
+
+        function generate(n) {
+            //递归至只身下一个的时候，可以返回这个数组了。
+            if (n === 1) {
+                c = c + 1;
+                newArr.push(arr.join(''));
+            }
+            else {
+                //重点就是这里，整个题目所有所有的关键就这两步！
+                for (var i = 0; i < n; i++) {
+                    //自身调用，挨个排好
+                    generate(n - 1);
+                    //奇数取0，偶数取i
+                    change(n % 2 ? 0 : i, n - 1);
+                }
+            }
+        }
+
+        //调用函数，然后去掉不符合要求的元素，再返回长度
+        generate(arr.length);
+        console.log("count"+c);
+        var result = newArr.filter(function (string) {
+            return !string.match(re);
+        });
+        return result.length;
+    }
+</script>
+</body>
+</html>

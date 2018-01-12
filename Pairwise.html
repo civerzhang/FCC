@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>Pairwise</title>
+        <!-- // <script src="../lib/jquery-1.11.2.min.js" type="text/javascript"></script> -->
+    </head>
+    <body>
+        <script type="text/javascript">
+        /*举个例子：有一个能力数组[7,9,11,13,15]，按照最佳组合值为20来计算，只有7+13和9+11两种组合。而7在数组的索引为0，13在数组的索引为3，9在数组的索引为1，11在数组的索引为2。
+        所以我们说函数：pairwise([7,9,11,13,15],20) 的返回值应该是0+3+1+2的和，即6。
+        找到匹配的索引对，去重，再求和*/
+            function pairwise(arr, arg) {
+                var r = [];
+                for (var i = 0; i < arr.length; i++) {
+                    var need = arg-arr[i],
+                        needi = findIndex(need,arr)?findIndex(need,arr):-1;
+                    if (needi != -1&&i!=needi&&r.indexOf(i)==-1&&r.indexOf(needi)==-1) {
+                        r.push(i);r.push(needi);
+                    }
+                }
+                console.log(r)
+
+                return r.reduce(function(a,b){return a + b;},0);
+            }
+            function findIndex(need,arr){
+                for (var j = 1; j < arr.length; j++) {
+                    if (arr[j]==need) {
+                        return j
+                    };
+                }
+                return null;
+            }
+
+            pairwise([1,4,2,3,0,5], 7);
+        </script>
+    </body>
+</html>
